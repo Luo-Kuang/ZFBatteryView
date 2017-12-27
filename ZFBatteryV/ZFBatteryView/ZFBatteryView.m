@@ -90,8 +90,24 @@ const CGFloat h = 12;
     if (_percent != percent) {
         _percent = percent;
         CGFloat wii = 22 * percent/100.0;
-        UIBezierPath *contentPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(margin, margin, wii, h - margin * 2) cornerRadius:radius];
+        UIBezierPath *contentPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(2.0f, 2.0f, wii, 12 - 2.0f * 2) cornerRadius:1.5f];
         self.contentLayer.path = contentPath.CGPath;
+        if (percent < 10) {
+            if (!self.lowPower) {
+                if ([self.delegate respondsToSelector:@selector(zf_batteryLowPower)]) {
+                    [self.delegate zf_batteryLowPower];
+                }
+            }
+            self.lowPower = YES;
+            self.contentLayer.fillColor = [UIColor redColor].CGColor;
+        } else {
+            self.lowPower = NO;
+            if (!_charging) {
+                self.contentLayer.fillColor = [UIColor whiteColor].CGColor;
+            } else {
+                self.contentLayer.fillColor = [UIColor colorWithRed:111.0 / 255.0 green:215.0 / 255.0 blue:106.0 / 255.0 alpha:1].CGColor;
+            }
+        }
     }
     
 }
